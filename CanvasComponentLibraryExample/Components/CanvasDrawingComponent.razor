@@ -1,6 +1,6 @@
 ﻿<div class="my-component">
     This component is defined in the <strong>CanvasComponentLibraryExample</strong> library.
 </div>
-<div @ref="@divCanvas" @onclick="@OnClick">
-    <BECanvas @ref="@myCanvas" Height="800" Width="800"></BECanvas>
+<div id="divCanvas" @ref="@divCanvas" style="position: fixed; opacity: 1; width: 100%; height: 100%">
+    <BECanvas @ref="@myCanvas" Height="@screenHeight" Width="@screenWidth"></BECanvas>
 </div>

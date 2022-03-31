@@ -22,7 +22,7 @@ namespace CanvasComponentLibraryExample
         public DivCanvasJsInterop(IJSRuntime jsRuntime)
         {
             moduleTask = new(() => jsRuntime.InvokeAsync<IJSObjectReference>(
-               "import", "./_content/CanvasComponentLibraryExample/divCanvasJsInterop.js").AsTask());
+               "import", "./_content/CanvasComponentLibraryExample/Scripts/divCanvasJsInterop.js").AsTask());
         }
 
         public async ValueTask<string> GetDivCanvasOffset(object[] divCanvas)
