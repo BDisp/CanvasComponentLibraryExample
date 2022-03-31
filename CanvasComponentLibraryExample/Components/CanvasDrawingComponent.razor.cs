@@ -37,14 +37,13 @@ namespace CanvasComponentLibraryExample.Components
         {
             if (firstRender)
             {
+                currentCanvasContext = await myCanvas.CreateCanvas2DAsync();
+
                 //var canvasDrawing = new CanvasDrawingInterop(jSRuntime);
                 //await canvasDrawing.InitConsole(DotNetObjectReference.Create(this));
                 await jSRuntime.InvokeVoidAsync("initConsole", DotNetObjectReference.Create(this));
                 // this will make sure that the viewport is correctly initialized
-                //await jSRuntime.InvokeAsync<object>("consoleWindowResize", DotNetObjectReference.Create(this));
-
-                currentCanvasContext = await myCanvas.CreateCanvas2DAsync();
-                await DrawChart();
+                await jSRuntime.InvokeAsync<object>("consoleWindowResize", DotNetObjectReference.Create(this));
             }
             await base.OnAfterRenderAsync(firstRender);
         }
@@ -124,7 +123,7 @@ namespace CanvasComponentLibraryExample.Components
             {
                 //string data = await jSRuntime.InvokeAsync<string>("getDivCanvasOffset", new object[] { divCanvas });
                 //string data = await DivCanvasJsInterop.GetDivCanvasOffset(jSRuntime, new object[] { divCanvas });
-                var divCanvasJsInterop = new DivCanvasJsInterop(jSRuntime);
+                var divCanvasJsInterop = new DivCanvasJsInterop(jSRuntime!);
                 string data = await divCanvasJsInterop.GetDivCanvasOffset(new object[] { divCanvas });
                 JObject offsets = (JObject)JsonConvert.DeserializeObject(data)!;
                 mouseX = eventArgs.ClientX - offsets.Value<double>("offsetLeft");

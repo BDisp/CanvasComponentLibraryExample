@@ -8,9 +8,9 @@
     console.instance.invokeMethodAsync('OnResize', console.canvas.width, console.canvas.height);
 }
 
-//window.consoleWindowResize = (instance) => {
-//    onResize();
-//};
+window.consoleWindowResize = (instance) => {
+    onResize();
+};
 
 window.initConsole = (instance) => {
     var canvasContainer = document.getElementById('divCanvas'),
