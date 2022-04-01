@@ -40,7 +40,10 @@ window.initConsole = (instance) => {
         //};
 
         window.console.canvas.onkeydown = (e) => {
-            console.instance.invokeMethodAsync('OnKeyDown', e);
+            var ke = {
+                Code: e.code
+            };
+            console.instance.invokeMethodAsync('OnKeyDown', ke);
         };
         //window.console.canvas.onkeyup = (e) => {
         //    console.instance.invokeMethodAsync('OnKeyUp', e.keyCode);

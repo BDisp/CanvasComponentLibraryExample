@@ -10,8 +10,12 @@ namespace CanvasComponentLibraryExample.Components
 {
     public partial class CanvasDrawingComponent : ComponentBase
     {
+        private int screenLeft = 20;
+        private int screenTop = 20;
         private int screenWidth = 800;
         private int screenHeight = 800;
+        private double mouseX;
+        private double mouseY;
 
         private Canvas2DContext? currentCanvasContext;
 
@@ -41,15 +45,20 @@ namespace CanvasComponentLibraryExample.Components
 
                 //var canvasDrawing = new CanvasDrawingInterop(jSRuntime);
                 //await canvasDrawing.InitConsole(DotNetObjectReference.Create(this));
-                await jSRuntime.InvokeVoidAsync("initConsole", DotNetObjectReference.Create(this));
+                await jSRuntime!.InvokeVoidAsync("initConsole", DotNetObjectReference.Create(this));
                 // this will make sure that the viewport is correctly initialized
-                await jSRuntime.InvokeAsync<object>("consoleWindowResize", DotNetObjectReference.Create(this));
+                await jSRuntime!.InvokeAsync<object>("consoleWindowResize", DotNetObjectReference.Create(this));
             }
             await base.OnAfterRenderAsync(firstRender);
         }
 
         private async Task DrawChart()
         {
+            await currentCanvasContext!.ClearRectAsync(0, 0, screenWidth, screenHeight);
+            await currentCanvasContext.SetFillStyleAsync("Red");
+            await currentCanvasContext.FillRectAsync(mouseX, mouseY, 5, 5);
+            await currentCanvasContext.StrokeTextAsync("ClientX: " + mouseX + " ClientY: " + mouseY, screenLeft, screenTop);
+
             List<PieChartSlice> pieChartData = new List<PieChartSlice>();
 
             pieChartData.Add(new PieChartSlice
@@ -117,8 +126,6 @@ namespace CanvasComponentLibraryExample.Components
         [JSInvokable]
         public async void OnClick(MouseEventArgs eventArgs)
         {
-            double mouseX = 0;
-            double mouseY = 0;
             if (divCanvas.Id?.Length > 0)
             {
                 //string data = await jSRuntime.InvokeAsync<string>("getDivCanvasOffset", new object[] { divCanvas });
@@ -128,11 +135,6 @@ namespace CanvasComponentLibraryExample.Components
                 JObject offsets = (JObject)JsonConvert.DeserializeObject(data)!;
                 mouseX = eventArgs.ClientX - offsets.Value<double>("offsetLeft");
                 mouseY = eventArgs.ClientY - offsets.Value<double>("offsetTop");
-                //currentCanvasContext = await myCanvas.CreateCanvas2DAsync();
-                await currentCanvasContext.ClearRectAsync(0, 0, screenWidth, screenHeight);
-                await currentCanvasContext.SetFillStyleAsync("Red");
-                await currentCanvasContext.FillRectAsync(mouseX, mouseY, 5, 5);
-                await currentCanvasContext.StrokeTextAsync("ClientX: " + mouseX + " ClientY: " + mouseY, 20, 20);
 
                 await DrawChart();
             }
@@ -141,7 +143,25 @@ namespace CanvasComponentLibraryExample.Components
         [JSInvokable]
         public async void OnKeyDown(KeyboardEventArgs eventArgs)
         {
-
+            switch (eventArgs.Code)
+            {
+                case "ArrowLeft":
+                    screenLeft = Math.Max(screenLeft - 20, 0);
+                    await DrawChart();
+                    break;
+                case "ArrowRight":
+                    screenLeft = Math.Min(screenLeft + 20, screenWidth - 20);
+                    await DrawChart();
+                    break;
+                case "ArrowUp":
+                    screenTop = Math.Max(screenTop - 20, 0);
+                    await DrawChart();
+                    break;
+                case "ArrowDown":
+                    screenTop = Math.Min(screenTop + 20, screenHeight - 20);
+                    await DrawChart();
+                    break;
+            }
         }
     }
 }
