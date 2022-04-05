@@ -57,6 +57,7 @@ namespace CanvasComponentLibraryExample.Components
             await currentCanvasContext!.ClearRectAsync(0, 0, screenWidth, screenHeight);
             await currentCanvasContext.SetFillStyleAsync("Red");
             await currentCanvasContext.FillRectAsync(mouseX, mouseY, 5, 5);
+            await currentCanvasContext.SetTextBaselineAsync(TextBaseline.Top);
             await currentCanvasContext.StrokeTextAsync("ClientX: " + mouseX + " ClientY: " + mouseY, screenLeft, screenTop);
 
             List<PieChartSlice> pieChartData = new List<PieChartSlice>();
